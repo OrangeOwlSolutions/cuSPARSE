@@ -91,9 +91,6 @@ int main() {
 	cusparseSafeCall(cusparseCreateMatDescr(&descrA));
 	cusparseSafeCall(cusparseCreateMatDescr(&descrC));
 
-	cusparseSetMatIndexBase(descrA, CUSPARSE_INDEX_BASE_ZERO);
-	cusparseSetMatType(descrA, CUSPARSE_MATRIX_TYPE_GENERAL);
-	
 	const int M = 9;										// --- Number of rows
 	const int N = 9;										// --- Number of columns
 
