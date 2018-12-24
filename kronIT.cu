@@ -1,8 +1,8 @@
 // --- Equivalent to Matlab's
 //     m = 5;
 //     I = speye(m);
-//     e = ones(m, 1);
-//     T = spdiags([e -4 * e e],[-1 0 1], m, m);
+//     e = ones(3, 1);
+//     T = spdiags([e -4 * e e],[-1 0 1], 3, 3);
 //     kron(I, T)
 
 #include <stdio.h>
@@ -114,7 +114,7 @@ int main() {
 	int *h_bsrColIndA = (int *)malloc(nnzb * sizeof(int));
 
 	for (int k = 0; k < nnzb; k++) memcpy(h_bsrValA + k * blockMatrixSize * blockMatrixSize, h_block, blockMatrixSize * blockMatrixSize * sizeof(float));
-	
+
 	h_bsrRowPtrA[0] = 0;
 	h_bsrRowPtrA[1] = 1;
 	h_bsrRowPtrA[2] = 2;
