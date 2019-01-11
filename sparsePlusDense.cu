@@ -131,8 +131,6 @@ __global__ void sparsePlusDense(const double * __restrict__ d_A, const int * __r
 	
 	const int	col			= d_A_ColIndices[d_A_RowIndices[tidy] + tidx];
 
-	//printf("%i %i %f\n", row, col, d_A[d_A_RowIndices[tidy] + tidx]);
-	printf("%i %i %f\n", row, col, d_C[row * N + col]);
 	d_C[row * N + col] = d_C[row * N + col] + d_A[d_A_RowIndices[tidy] + tidx];
 }
 
