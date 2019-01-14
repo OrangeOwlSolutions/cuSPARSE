@@ -213,8 +213,8 @@ int main()
 
 	cusparseSafeCall(cusparseSetPointerMode(handle, CUSPARSE_POINTER_MODE_HOST));
 
-	cusparseSafeCall(cusparseXcsrgemmNnz(handle, CUSPARSE_OPERATION_NON_TRANSPOSE, CUSPARSE_OPERATION_NON_TRANSPOSE, N, N, N, descrB, nnzB,
-		d_B_RowIndices, d_B_ColIndices, descrA, nnzA, d_A_RowIndices, d_A_ColIndices, descrC, d_C_RowIndices,
+	cusparseSafeCall(cusparseXcsrgemmNnz(handle, CUSPARSE_OPERATION_NON_TRANSPOSE, CUSPARSE_OPERATION_NON_TRANSPOSE, N, N, N, descrA, nnzA,
+		d_A_RowIndices, d_A_ColIndices, descrB, nnzB, d_B_RowIndices, d_B_ColIndices, descrC, d_C_RowIndices,
 		nnzTotalDevHostPtr));
 	if (NULL != nnzTotalDevHostPtr) nnzC = *nnzTotalDevHostPtr;
 	else {
@@ -226,8 +226,8 @@ int main()
 	double *d_C;			gpuErrchk(cudaMalloc(&d_C, nnzC * sizeof(double)));
 	double *h_C = (double *)malloc(nnzC * sizeof(*h_C));
 	int *h_C_ColIndices = (int *)malloc(nnzC * sizeof(*h_C_ColIndices));
-	cusparseSafeCall(cusparseDcsrgemm(handle, CUSPARSE_OPERATION_NON_TRANSPOSE, CUSPARSE_OPERATION_NON_TRANSPOSE, N, N, N, descrB, nnzB,
-		d_B, d_B_RowIndices, d_B_ColIndices, descrA, nnzA, d_A, d_A_RowIndices, d_A_ColIndices, descrC,
+	cusparseSafeCall(cusparseDcsrgemm(handle, CUSPARSE_OPERATION_NON_TRANSPOSE, CUSPARSE_OPERATION_NON_TRANSPOSE, N, N, N, descrA, nnzA,
+		d_A, d_A_RowIndices, d_A_ColIndices, descrB, nnzB, d_B, d_B_RowIndices, d_B_ColIndices, descrC,
 		d_C, d_C_RowIndices, d_C_ColIndices));
 
 	cusparseSafeCall(cusparseDcsr2dense(handle, N, N, descrC, d_C, d_C_RowIndices, d_C_ColIndices, d_C_dense, N));
