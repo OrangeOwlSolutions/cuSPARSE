@@ -108,17 +108,17 @@ int main() {
 	int *h_bsrColIndA = (int *)malloc(nnzb * sizeof(int));
 
 	memcpy(h_bsrValA, h_Ab0, blockMatrixSize * blockMatrixSize * sizeof(float));
-	memcpy(h_bsrValA + 1 * blockMatrixSize * blockMatrixSize, h_Ab1, blockMatrixSize * blockMatrixSize 
+	memcpy(h_bsrValA + 1 * blockMatrixSize * blockMatrixSize, h_Ab1, blockMatrixSize * blockMatrixSize
 		* sizeof(float));
-	memcpy(h_bsrValA + 2 * blockMatrixSize * blockMatrixSize, h_Ab1, blockMatrixSize * blockMatrixSize 
+	memcpy(h_bsrValA + 2 * blockMatrixSize * blockMatrixSize, h_Ab1, blockMatrixSize * blockMatrixSize
 		* sizeof(float));
-	memcpy(h_bsrValA + 3 * blockMatrixSize * blockMatrixSize, h_Ab0, blockMatrixSize * blockMatrixSize 
+	memcpy(h_bsrValA + 3 * blockMatrixSize * blockMatrixSize, h_Ab0, blockMatrixSize * blockMatrixSize
 		* sizeof(float));
-	memcpy(h_bsrValA + 4 * blockMatrixSize * blockMatrixSize, h_Ab1, blockMatrixSize * blockMatrixSize 
+	memcpy(h_bsrValA + 4 * blockMatrixSize * blockMatrixSize, h_Ab1, blockMatrixSize * blockMatrixSize
 		* sizeof(float));
-	memcpy(h_bsrValA + 5 * blockMatrixSize * blockMatrixSize, h_Ab1, blockMatrixSize * blockMatrixSize 
+	memcpy(h_bsrValA + 5 * blockMatrixSize * blockMatrixSize, h_Ab1, blockMatrixSize * blockMatrixSize
 		* sizeof(float));
-	memcpy(h_bsrValA + 6 * blockMatrixSize * blockMatrixSize, h_Ab0, blockMatrixSize * blockMatrixSize 
+	memcpy(h_bsrValA + 6 * blockMatrixSize * blockMatrixSize, h_Ab0, blockMatrixSize * blockMatrixSize
 		* sizeof(float));
 
 	h_bsrRowPtrA[0] = 0;	h_bsrRowPtrA[1] = 2;	h_bsrRowPtrA[2] = 5;	h_bsrRowPtrA[3] = 7;
@@ -127,12 +127,12 @@ int main() {
 	h_bsrColIndA[4] = 2;	h_bsrColIndA[5] = 1;	h_bsrColIndA[6] = 2;
 
 	// --- Device vectors defining the block-sparse matrix
-	float *d_bsrValA;		gpuErrchk(cudaMalloc(&d_bsrValA, blockMatrixSize * blockMatrixSize 
+	float *d_bsrValA;		gpuErrchk(cudaMalloc(&d_bsrValA, blockMatrixSize * blockMatrixSize
 		* nnzb * sizeof(float)));
 	int *d_bsrRowPtrA;		gpuErrchk(cudaMalloc(&d_bsrRowPtrA, (Mb + 1) * sizeof(int)));
 	int *d_bsrColIndA;		gpuErrchk(cudaMalloc(&d_bsrColIndA, nnzb * sizeof(int)));
 
-	gpuErrchk(cudaMemcpy(d_bsrValA, h_bsrValA, blockMatrixSize * blockMatrixSize * nnzb * sizeof(float), 
+	gpuErrchk(cudaMemcpy(d_bsrValA, h_bsrValA, blockMatrixSize * blockMatrixSize * nnzb * sizeof(float),
 		cudaMemcpyHostToDevice));
 	gpuErrchk(cudaMemcpy(d_bsrRowPtrA, h_bsrRowPtrA, (Mb + 1) * sizeof(int), cudaMemcpyHostToDevice));
 	gpuErrchk(cudaMemcpy(d_bsrColIndA, h_bsrColIndA, nnzb * sizeof(int), cudaMemcpyHostToDevice));
@@ -143,7 +143,7 @@ int main() {
 	int *d_csrRowPtrC;		gpuErrchk(cudaMalloc(&d_csrRowPtrC, (M + 1) * sizeof(int)));
 	int *d_csrColIndC;		gpuErrchk(cudaMalloc(&d_csrColIndC, nnz		* sizeof(int)));
 	float *d_csrValC;		gpuErrchk(cudaMalloc(&d_csrValC, nnz		* sizeof(float)));
-	cusparseSafeCall(cusparseSbsr2csr(handle, dir, Mb, Nb, descrA, d_bsrValA, d_bsrRowPtrA, d_bsrColIndA, 
+	cusparseSafeCall(cusparseSbsr2csr(handle, dir, Mb, Nb, descrA, d_bsrValA, d_bsrRowPtrA, d_bsrColIndA,
 		blockMatrixSize, descrC, d_csrValC, d_csrRowPtrC, d_csrColIndC));
 
 	// --- Transforming csr to dense format
@@ -152,7 +152,7 @@ int main() {
 
 	float *h_A = (float *)malloc(M * N * sizeof(float));
 	gpuErrchk(cudaMemcpy(h_A, d_A, M * N * sizeof(float), cudaMemcpyDeviceToHost));
-	
+
 	// --- m is row index, n column index
 	for (int m = 0; m < M; m++) {
 		for (int n = 0; n < N; n++) {
