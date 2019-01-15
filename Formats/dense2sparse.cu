@@ -97,17 +97,17 @@ void dense2SparseD(const double * __restrict__ d_A_dense, int **d_nnzPerVector, 
 	gpuErrchk(cudaMalloc(&d_nnzPerVector[0], Nrows * sizeof(int)));
 
 	// --- Compute the number of nonzero elements per row and the total number of nonzero elements 
-		//     the dense d_A_dense
-	cusparseSafeCall(cusparseDnnz(handle, CUSPARSE_DIRECTION_ROW, Nrows, Ncols, descrA, d_A_dense, 
-                     lda, d_nnzPerVector[0], &nnz));
+	//     the dense d_A_dense
+	cusparseSafeCall(cusparseDnnz(handle, CUSPARSE_DIRECTION_ROW, Nrows, Ncols, descrA, d_A_dense,
+		lda, d_nnzPerVector[0], &nnz));
 
 	// --- Device side sparse matrix
 	gpuErrchk(cudaMalloc(&d_A[0], nnz * sizeof(double)));
 	gpuErrchk(cudaMalloc(&d_A_RowIndices[0], (Nrows + 1) * sizeof(int)));
 	gpuErrchk(cudaMalloc(&d_A_ColIndices[0], nnz * sizeof(int)));
 
-	cusparseSafeCall(cusparseDdense2csr(handle, Nrows, Ncols, descrA, d_A_dense, lda, d_nnzPerVector[0], 
-							d_A[0], d_A_RowIndices[0], d_A_ColIndices[0]));
+	cusparseSafeCall(cusparseDdense2csr(handle, Nrows, Ncols, descrA, d_A_dense, lda, d_nnzPerVector[0],
+		d_A[0], d_A_RowIndices[0], d_A_ColIndices[0]));
 }
 
 /********/
@@ -116,7 +116,7 @@ void dense2SparseD(const double * __restrict__ d_A_dense, int **d_nnzPerVector, 
 int main() {
 
 	cusparseHandle_t	handle;
-	
+
 	// --- Initialize cuSPARSE
 	cusparseSafeCall(cusparseCreate(&handle));
 
@@ -135,11 +135,11 @@ int main() {
 	double *h_A_dense = (double*)malloc(Nrows * Ncols * sizeof(*h_A_dense));
 
 	// --- Column-major storage
-	h_A_dense[ 0] = 0.4612;  h_A_dense[ 5] = 0.0;       h_A_dense[10] = 1.3;     h_A_dense[15] = 0.0;
-	h_A_dense[ 1] = 0.0;     h_A_dense[ 6] = 1.443;     h_A_dense[11] = 0.0;     h_A_dense[16] = 0.0;
-	h_A_dense[ 2] = -0.0006; h_A_dense[ 7] = 0.4640;    h_A_dense[12] = 0.0723;  h_A_dense[17] = 0.0;
-	h_A_dense[ 3] = 0.3566;  h_A_dense[ 8] = 0.0;       h_A_dense[13] = 0.7543;  h_A_dense[18] = 0.0;
-	h_A_dense[ 4] = 0.;      h_A_dense[ 9] = 0.0;       h_A_dense[14] = 0.0;     h_A_dense[19] = 0.1;
+	h_A_dense[0] = 0.4612;  h_A_dense[5] = 0.0;       h_A_dense[10] = 1.3;     h_A_dense[15] = 0.0;
+	h_A_dense[1] = 0.0;     h_A_dense[6] = 1.443;     h_A_dense[11] = 0.0;     h_A_dense[16] = 0.0;
+	h_A_dense[2] = -0.0006; h_A_dense[7] = 0.4640;    h_A_dense[12] = 0.0723;  h_A_dense[17] = 0.0;
+	h_A_dense[3] = 0.3566;  h_A_dense[8] = 0.0;       h_A_dense[13] = 0.7543;  h_A_dense[18] = 0.0;
+	h_A_dense[4] = 0.;      h_A_dense[9] = 0.0;       h_A_dense[14] = 0.0;     h_A_dense[19] = 0.1;
 
 	// --- Create device array and copy host array to it
 	double *d_A_dense;  gpuErrchk(cudaMalloc(&d_A_dense, Nrows * Ncols * sizeof(double)));
@@ -154,9 +154,9 @@ int main() {
 	double *d_A;		// --- Sparse matrix values - array of size nnz
 	int *d_A_RowIndices;	// --- "Row indices"
 	int *d_A_ColIndices;	// --- "Column indices"
-	
-	dense2SparseD(d_A_dense, &d_nnzPerVector, &d_A, &d_A_RowIndices, &d_A_ColIndices, nnz, descrA, 
-                  handle, Nrows, Ncols);
+
+	dense2SparseD(d_A_dense, &d_nnzPerVector, &d_A, &d_A_RowIndices, &d_A_ColIndices, nnz, descrA,
+		handle, Nrows, Ncols);
 
 	/*******************************************************/
 	/* CHECKING THE RESULTS FOR DENSE TO SPARSE CONVERSION */
@@ -166,7 +166,7 @@ int main() {
 	gpuErrchk(cudaMemcpy(h_nnzPerVector, d_nnzPerVector, Nrows * sizeof(int), cudaMemcpyDeviceToHost));
 
 	printf("Number of nonzero elements in dense matrix = %i\n\n", nnz);
-	for (int i = 0; i < Nrows; ++i) 
+	for (int i = 0; i < Nrows; ++i)
 		printf("Number of nonzero elements in row %i = %i \n", i, h_nnzPerVector[i]);
 	printf("\n");
 
@@ -179,31 +179,31 @@ int main() {
 	gpuErrchk(cudaMemcpy(h_A_ColIndices, d_A_ColIndices, nnz * sizeof(int), cudaMemcpyDeviceToHost));
 
 	printf("\nOriginal matrix in CSR format\n\n");
-	for (int i = 0; i < nnz; ++i) printf("A[%i] = %f\n", i, h_A[i]); 
+	for (int i = 0; i < nnz; ++i) printf("A[%i] = %f\n", i, h_A[i]);
 	printf("\n\n");
 
-	for (int i = 0; i < (Nrows + 1); ++i) printf("h_A_RowIndices[%i] = %i \n", i, h_A_RowIndices[i]); 
+	for (int i = 0; i < (Nrows + 1); ++i) printf("h_A_RowIndices[%i] = %i \n", i, h_A_RowIndices[i]);
 	printf("\n");
 	for (int i = 0; i < nnz; ++i) printf("h_A_ColIndices[%i] = %i \n", i, h_A_ColIndices[i]);
 
 	/*******************************/
 	/* FROM SPARSE TO DENSE MATRIX */
 	/*******************************/
-	double *d_A_denseReconstructed; gpuErrchk(cudaMalloc(&d_A_denseReconstructed, 
+	double *d_A_denseReconstructed; gpuErrchk(cudaMalloc(&d_A_denseReconstructed,
 		Nrows * Ncols * sizeof(double)));
 	cusparseSafeCall(cusparseDcsr2dense(handle, Nrows, Ncols, descrA, d_A, d_A_RowIndices, d_A_ColIndices,
-									    d_A_denseReconstructed, Nrows));
-		
+		d_A_denseReconstructed, Nrows));
+
 	/*******************************************************/
 	/* CHECKING THE RESULTS FOR SPARSE TO DENSE CONVERSION */
 	/*******************************************************/
 	double *h_A_denseReconstructed = (double *)malloc(Nrows * Ncols * sizeof(double));
-	gpuErrchk(cudaMemcpy(h_A_denseReconstructed, d_A_denseReconstructed, Nrows * Ncols * sizeof(double), 
-			  cudaMemcpyDeviceToHost));
+	gpuErrchk(cudaMemcpy(h_A_denseReconstructed, d_A_denseReconstructed, Nrows * Ncols * sizeof(double),
+		cudaMemcpyDeviceToHost));
 
 	printf("\nReconstructed dense matrix \n");
 	for (int m = 0; m < Nrows; m++) {
-		for (int n = 0; n < Ncols; n++) 
+		for (int n = 0; n < Ncols; n++)
 			printf("%f\t", h_A_denseReconstructed[n * Nrows + m]);
 		printf("\n");
 	}
